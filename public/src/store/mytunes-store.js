@@ -11,7 +11,7 @@ var store = new vuex.Store({
   },
   mutations: {
     setResults(state, results){
-      state.results = results
+      state.results = results.results
     }
   },
   actions: {
@@ -19,15 +19,19 @@ var store = new vuex.Store({
       var url = '//bcw-getter.herokuapp.com/?url=';
       var url2 = 'https://itunes.apple.com/search?term=' + artist;
       var apiUrl = url + encodeURIComponent(url2);
-      $.get(apiUrl).then(data=>{
+      $.getJSON(url2).then(data=>{
         commit('setResults', data)
+        console.log(data)
       })
     },
     getMyTunes({commit, dispatch}){
       //this should send a get request to your server to return the list of saved tunes
     },
     addToMyTunes({commit, dispatch}, track){
-      //this will post to your server adding a new track to your tunes
+      debugger
+      $.post('//music:musicnow@ds040877.mlab.com:40877/my-music/music/mymusic/song').then(song =>{
+        console.log(song)
+      })
     },
     removeTrack({commit, dispatch}, track){
       //Removes track from the database with delete
@@ -43,3 +47,4 @@ var store = new vuex.Store({
 })
 
 export default store
+
