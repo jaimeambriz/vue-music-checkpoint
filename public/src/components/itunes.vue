@@ -1,15 +1,17 @@
 <template>
     <div class="itunes">
-        <form @submit.prevent="getMusicByArtist" class="form">
-            <input type="text" placeholder="Name">
+        <form @submit.prevent="getMusicByArtist" class="form text-center">
+            <input type="text" class="text-center" placeholder="Artist/Song" v-model="searchArtist">
             <button type="submit">Get Trak§</button>
         </form>
-        <div v-for="(song, i) in results" class="song container">
+
+
+        <div v-for="song in results" class="song container">
             <div class="row">
                 <div class="col-sm-3 flex">
                     <div class="img">
                         <img :src="song.artworkUrl100" alt="">
-                        <button @click="addToMyTunes(song, song.trackId)" class="btn btn-success">add to playlist</button>
+                        <button @click="addToMyTunes(song)" class="btn btn-success">add to playlist</button>
                     </div>
 
                 </div>
@@ -50,24 +52,29 @@
         name: 'itunes',
         data() {
             return {
+                searchArtist: ''
 
             }
         },
 
         methods: {
-            getMusicByArtist(artist) {
-                this.$store.dispatch('getMusicByArtist', artist.currentTarget["0"].value)
+            getMusicByArtist() {
+                this.$store.dispatch('getMusicByArtist', this.searchArtist)
+                this.searchArtist = ''
             },
-            addToMyTunes(song, trackId) {
+            addToMyTunes(song) {
                 debugger
-                this.$store.dispatch('addToMyTunes', {song, trackId})
+                song.rank = this.$store.state.myTunes.length
+                this.$store.dispatch('addToMyTunes', song )
+
             }
         },
         computed: {
             results() {
                 return this.$store.state.results
             }
-        }
+        },
+      
     }
 </script>
 
@@ -97,25 +104,8 @@
         text-align: center;
     }
 
-    .results,
     .container {
         max-width: 100%;
-    }
-
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .traks {
-        margin-top: 6%;
-        font-size: 80px;
-        color: gray;
-        text-align: center;
-    }
-
-    .container-fluid {
-        margin-top: 34px;
     }
 
     .flex {
@@ -133,8 +123,6 @@
         animation: 1.1s cubic-bezier(0, 0.03, 0.15, 1.6) 0s 1 slideInFromBottom;
 
     }
-
-
 
     @keyframes slideInFromBottom {
         0% {

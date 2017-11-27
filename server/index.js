@@ -13,13 +13,12 @@ server.use(cors({}))
 server.use(express.static(__dirname + '/public'))
 server.use(bp.json())
 server.use(bp.urlencoded({extended: true}))
-server.use(musicRoutes)
-
 
 
 
 
 //routes
+server.use(musicRoutes)
 
 //getMytunes (get)
 
