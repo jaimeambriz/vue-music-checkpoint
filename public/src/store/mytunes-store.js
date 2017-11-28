@@ -15,9 +15,9 @@ var store = new vuex.Store({
       state.results = results.results
     },
     setMyTunes(state, songs) {
-      songs.sort(function(a,b){
-      return b.rank - a.rank;
-        })
+      songs.sort(function (a, b) {
+        return a.rank - b.rank;
+      })
       state.myTunes = songs
       console.log("my tunes:", state.myTunes)
     }
@@ -75,32 +75,81 @@ var store = new vuex.Store({
     },
     promoteTrack({ commit, dispatch }, song) {
       //this should increase the position / upvotes and downvotes on the track
-      $.ajax({
-        // url:`http://localhost:3000/music/songs/${song}`,
-        url: "http://localhost:3000/music/songs/" + song._id,
-        method: 'PUT',
-        contentType:'application/json',
-        data: JSON.stringify(song)
-      })
-        .then(res => {
-          console.log("Updated track:", res)
-          dispatch('getMyTunes')
+      var myTunes = store.state.myTunes
+      var nextSong = {}
+      if (song.rank > 1) {
+        song.rank--
+        for (let i = 0; i < myTunes.length; i++) {
+          const conflictingSong = myTunes[i]
+          if (song.rank == conflictingSong.rank &&  song._id !== conflictingSong._id ) {
+            nextSong = conflictingSong
+            nextSong.rank++
+          }
+        }
+        $.ajax({
+          // url:`http://localhost:3000/music/songs/${song}`,
+          url: "http://localhost:3000/music/songs/" + nextSong._id,
+          method: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify(nextSong)
         })
+          .then(res => {
+            console.log("Updated Next Song:", res)
+          })
+        $.ajax({
+          // url:`http://localhost:3000/music/songs/${song}`,
+          url: "http://localhost:3000/music/songs/" + song._id,
+          method: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify(song)
+        })
+          .then(res => {
+            console.log("Updated track:", res)
+            dispatch('getMyTunes')
+          })
+      } else {
+        console.log("Can't do that, alrady at the top!")
+      }
     },
     demoteTrack({ commit, dispatch }, song) {
-      //this should decrease the position / upvotes and downvotes on the track
-      $.ajax({
-        // url:`http://localhost:3000/music/songs/${song}`,
-        url: "http://localhost:3000/music/songs/" + song._id,
-        method: 'PUT',
-        contentType:'application/json',
-        data: JSON.stringify(song)
-        
-      })
-        .then(res => {
-          console.log("Updated track:", res)
-          dispatch('getMyTunes')
+      //this should decrease the position / upvotes and downvotes on the
+      var myTunes = store.state.myTunes
+      var nextSong = {}
+      if (song.rank < myTunes.length) {
+        song.rank++
+        for (let i = 0; i < myTunes.length; i++) {
+          const conflictingSong = myTunes[i]
+          if (song.rank == conflictingSong.rank &&  song._id !== conflictingSong._id ) {
+            nextSong = conflictingSong
+            nextSong.rank--
+          }
+        }
+        $.ajax({
+          // url:`http://localhost:3000/music/songs/${song}`,
+          url: "http://localhost:3000/music/songs/" + nextSong._id,
+          method: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify(nextSong)
         })
+          .then(res => {
+            console.log("Updated Next Song:", res)
+          })
+        $.ajax({
+          // url:`http://localhost:3000/music/songs/${song}`,
+          url: "http://localhost:3000/music/songs/" + song._id,
+          method: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify(song)
+
+        })
+          .then(res => {
+            console.log("Updated track:", res)
+            dispatch('getMyTunes')
+          })
+
+      } else {
+        console.log("can't do that, already at lowest rank!")
+      }
     }
 
   }

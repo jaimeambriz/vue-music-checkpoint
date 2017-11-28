@@ -102,6 +102,7 @@ router.post('/music/playlists/:pid/songs', (req, res, next) => {
 
 //update songs
 router.put('/music/playlists/:pid/songs/:id', (req, res, next) => {
+
     Songs.findByIdAndUpdate(req.params.id, req.body)
         .then(song => {
             res.send('Song was updated successfully!')

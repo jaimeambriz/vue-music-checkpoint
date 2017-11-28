@@ -7,6 +7,14 @@
                     <div class="img">
                         <img :src="song.albumArt" alt="">
                         <button @click="removeFromPlaylist(song._id)" class="btn btn-danger">Remove Track</button>
+                        <div class="row">
+                            <div class="col-sm-12 promote-demote">
+                                <i class="fa fa-arrow-up fa-lg" style="color: white;" @click="promoteTrack(song)"></i>
+                                <h4>{{song.rank}}</h4>
+                                <i class="fa fa-arrow-down fa-lg" style="color: white;" @click="demoteTrack(song)"></i>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
@@ -28,11 +36,6 @@
                             <p>{{song.albumPrice}}</p>
 
                         </li>
-                        <li>
-                            <i class="glyphicon glyphicon-chevron-up" style="color: white;" @click="promoteTrack(song)"></i>
-                            <p>{{song.rank}}</p>
-                        </li>
-                        <i class="glyphicon glyphicon-chevron-down" style="color: white;" @click="demoteTrack(song)"></i>
                         <li>
                             <audio controls class="audio">
                                 <source :src="song.preview" type="audio/ogg">
@@ -63,11 +66,9 @@
                 this.$store.dispatch('removeTrack', song)
             },
             promoteTrack(song) {
-                song.rank++
                 this.$store.dispatch('promoteTrack', song)
             },
             demoteTrack(song) {
-                song.rank--
                 this.$store.dispatch('demoteTrack', song)
             }
         },
@@ -79,10 +80,14 @@
     }
 </script>
 <style>
-i:hover{
-    cursor:pointer;
-}
+    i:hover {
+        cursor: pointer;
+    }
 
-
-
+    .promote-demote {
+        display: flex;
+        justify-content: center;
+        justify-content: space-around;
+        align-items: baseline;
+    }
 </style>

@@ -63,8 +63,7 @@
                 this.searchArtist = ''
             },
             addToMyTunes(song) {
-                debugger
-                song.rank = this.$store.state.myTunes.length
+                song.rank = this.$store.state.myTunes.length+1
                 this.$store.dispatch('addToMyTunes', song )
 
             }
