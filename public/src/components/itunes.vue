@@ -4,8 +4,6 @@
             <input type="text" class="text-center" placeholder="Artist/Song" v-model="searchArtist">
             <button type="submit">Get Trak§</button>
         </form>
-
-
         <div v-for="song in results" class="song container">
             <div class="row">
                 <div class="col-sm-3 flex">
@@ -100,6 +98,7 @@
     }
 
     .form {
+        margin-top: 12px;
         text-align: center;
     }
 
