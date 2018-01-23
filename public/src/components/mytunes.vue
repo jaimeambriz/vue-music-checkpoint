@@ -1,6 +1,7 @@
 <template>
     <div class="mytunes">
         <h1 class="text-center" style="font-family: fantasy; color: white">My Playlist</h1>
+
         <div v-for="song in myTunes" class="song container">
             <div class="row">
                 <div class="col-sm-3 flex">
@@ -46,13 +47,17 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
 
 <script>
+
     export default {
         name: 'mytunes',
+
+
         data() {
             return {
 
@@ -60,6 +65,7 @@
         },
         mounted() {
             this.$store.dispatch('getMyTunes')
+
         },
         methods: {
             removeFromPlaylist(song) {
@@ -75,6 +81,9 @@
         computed: {
             myTunes() {
                 return this.$store.state.myTunes
+            },
+            exampleList() {
+                return this.$store.state.exampleList
             }
         }
     }

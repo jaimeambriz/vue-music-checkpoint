@@ -8,11 +8,18 @@ var store = new vuex.Store({
   state: {
     myTunes: [],
     results: [],
+    exampleList: [
+      { Item: "hello1" }, 
+      { Item: "hello2" }, 
+      { Item: "hello3" }, 
+      { Item: "hello4" }
+
+    ]
   },
 
   mutations: {
     setResults(state, results) {
-      state.results = results.results
+      vue.set(state, 'results', results.results)
     },
     setMyTunes(state, songs) {
       songs.sort(function (a, b) {
@@ -81,7 +88,7 @@ var store = new vuex.Store({
         song.rank--
         for (let i = 0; i < myTunes.length; i++) {
           const conflictingSong = myTunes[i]
-          if (song.rank == conflictingSong.rank &&  song._id !== conflictingSong._id ) {
+          if (song.rank == conflictingSong.rank && song._id !== conflictingSong._id) {
             nextSong = conflictingSong
             nextSong.rank++
           }
@@ -119,7 +126,7 @@ var store = new vuex.Store({
         song.rank++
         for (let i = 0; i < myTunes.length; i++) {
           const conflictingSong = myTunes[i]
-          if (song.rank == conflictingSong.rank &&  song._id !== conflictingSong._id ) {
+          if (song.rank == conflictingSong.rank && song._id !== conflictingSong._id) {
             nextSong = conflictingSong
             nextSong.rank--
           }
