@@ -63,10 +63,10 @@
 
             }
         },
-        mounted() {
-            this.$store.dispatch('getMyTunes')
+        // mounted() {
+        //     this.$store.dispatch('getMyTunes')
 
-        },
+        // },
         methods: {
             removeFromPlaylist(song) {
                 this.$store.dispatch('removeTrack', song)
