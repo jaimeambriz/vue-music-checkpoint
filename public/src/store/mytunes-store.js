@@ -8,13 +8,6 @@ var store = new vuex.Store({
   state: {
     myTunes: [],
     results: [],
-    exampleList: [
-      { Item: "hello1" }, 
-      { Item: "hello2" }, 
-      { Item: "hello3" }, 
-      { Item: "hello4" }
-
-    ]
   },
 
   mutations: {
@@ -41,7 +34,7 @@ var store = new vuex.Store({
     },
     getMyTunes({ commit, dispatch }) {
       //this should send a get request to your server to return the list of saved tunes
-      $.getJSON('http://localhost:3000/music/songs')
+      $.getJSON('https://my-vue-music.herokuapp.com/music/songs')
         .then(songs => {
           commit('setMyTunes', songs)
         })
@@ -49,7 +42,7 @@ var store = new vuex.Store({
     },
     addToMyTunes({ commit, dispatch }, song) {
       //this will post to your server adding a new track to your tunes
-      var url = 'http://localhost:3000/music/songs'
+      var url = 'https://my-vue-music.herokuapp.com/music/songs'
       var track = {
         title: song.trackName,
         albumArt: song.artworkUrl100,
@@ -72,7 +65,7 @@ var store = new vuex.Store({
       //Removes track from the database with delete
       $.ajax({
         // url:`http://localhost:3000/music/songs/${song}`,
-        url: "http://localhost:3000/music/songs/" + song,
+        url: "https://my-vue-music.herokuapp.com/music/songs/" + song,
         method: 'DELETE'
       })
         .then(res => {
@@ -95,7 +88,7 @@ var store = new vuex.Store({
         }
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
-          url: "http://localhost:3000/music/songs/" + nextSong._id,
+          url: "https://my-vue-music.herokuapp.com/music/songs/" + nextSong._id,
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify(nextSong)
@@ -105,7 +98,7 @@ var store = new vuex.Store({
           })
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
-          url: "http://localhost:3000/music/songs/" + song._id,
+          url: "https://my-vue-music.herokuapp.com/music/songs/" + song._id,
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify(song)
@@ -133,7 +126,7 @@ var store = new vuex.Store({
         }
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
-          url: "http://localhost:3000/music/songs/" + nextSong._id,
+          url: "https://my-vue-music.herokuapp.com/music/songs/" + nextSong._id,
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify(nextSong)
@@ -143,7 +136,7 @@ var store = new vuex.Store({
           })
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
-          url: "http://localhost:3000/music/songs/" + song._id,
+          url: "https://my-vue-music.herokuapp.com/music/songs/" + song._id,
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify(song)
