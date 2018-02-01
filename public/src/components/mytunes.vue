@@ -1,10 +1,9 @@
 <template>
     <div class="mytunes">
         <h1 class="text-center" style="font-family: fantasy; color: white">My Playlist</h1>
-
-        <div v-for="song in myTunes" class="song container">
+        <div v-if="myTunes.length > 0" v-for="song in myTunes" class="song container">
             <div class="row">
-                <div class="col-sm-3 flex">
+                <div class="col-sm-3 flex img-animation" id="my-tunes-img">
                     <div class="img">
                         <img :src="song.albumArt" alt="">
                         <button @click="removeFromPlaylist(song._id)" class="btn btn-danger">Remove Track</button>
@@ -19,7 +18,7 @@
                     </div>
 
                 </div>
-                <div class="col-sm-9 info">
+                <div class="col-sm-9 info-animation" id="my-tunes-info">
                     <ul>
                         <li>
                             <h3>{{song.title}}</h3>
@@ -38,42 +37,42 @@
 
                         </li>
                         <li>
-                            <audio controls class="audio">
-                                <source :src="song.preview" type="audio/ogg">
-                                <source :src="song.preview" type="audio/mpeg">
-                            </audio>
+                            <my-audio :song="song"></my-audio>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
 
 <script>
-
+    import MyAudio from './MyAudio'
     export default {
         name: 'mytunes',
 
-
         data() {
             return {
-
             }
         },
         mounted() {
             this.$store.dispatch('getMyTunes')
+
         },
         methods: {
             removeFromPlaylist(song) {
                 this.$store.dispatch('removeTrack', song)
             },
             promoteTrack(song) {
+                // $('#my-tunes-img').removeClass('img-animation'),
+                //     $('#my-tunes-info').removeClass('info-animation'),
                 this.$store.dispatch('promoteTrack', song)
+
             },
             demoteTrack(song) {
+                // $('#my-tunes-img').removeClass('img-animation'),
+                //     $('#my-tunes-info').removeClass('info-animation'),
                 this.$store.dispatch('demoteTrack', song)
             }
         },
@@ -81,9 +80,9 @@
             myTunes() {
                 return this.$store.state.myTunes
             },
-            exampleList() {
-                return this.$store.state.exampleList
-            }
+        },
+        components: {
+            MyAudio
         }
     }
 </script>

@@ -129,6 +129,8 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 3.5%;
+  }
+  .img-animation{
     animation: 1.1s cubic-bezier(0, 0.03, 0.15, 1.6) 0s 1 slideInFromTop;
   }
 
@@ -136,7 +138,7 @@
     margin-top: 20px;
   }
 
-  .info {
+  .info-animation {
     animation: 1.1s cubic-bezier(0, 0.03, 0.15, 1.6) 0s 1 slideInFromBottom;
 
   }

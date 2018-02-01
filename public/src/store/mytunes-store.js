@@ -1,6 +1,7 @@
 import vue from 'vue'
 import vuex from 'vuex'
 import $ from 'jquery'
+let base = window.location.host.indexOf('localhost') > -1 ? '//localhost:3000/' : 'https://my-vue-music.herokuapp.com/'
 
 vue.use(vuex)
 
@@ -11,8 +12,8 @@ var store = new vuex.Store({
   },
 
   mutations: {
-    setResults(state, results) {
-      vue.set(state, 'results', results.results)
+    setResults(state, payload) {
+      vue.set(state, 'results', payload)
     },
     setMyTunes(state, songs) {
       songs.sort(function (a, b) {
@@ -24,25 +25,27 @@ var store = new vuex.Store({
   },
   actions: {
     getMusicByArtist({ commit, dispatch }, artist) {
+      commit('setResults',[])
       var url = '//bcw-getter.herokuapp.com/?url=';
       var url2 = 'https://itunes.apple.com/search?term=' + artist;
       var apiUrl = url + encodeURIComponent(url2);
       $.getJSON(url2).then(data => {
-        commit('setResults', data)
+        commit('setResults', data.results)
         console.log('search results:', data)
       })
     },
     getMyTunes({ commit, dispatch }) {
       //this should send a get request to your server to return the list of saved tunes
-      $.getJSON('https://my-vue-music.herokuapp.com/music/songs')
+      $.getJSON( base + 'music/songs')
         .then(songs => {
+          commit('setMyTunes', [])
           commit('setMyTunes', songs)
         })
 
     },
     addToMyTunes({ commit, dispatch }, song) {
       //this will post to your server adding a new track to your tunes
-      var url = 'https://my-vue-music.herokuapp.com/music/songs'
+      var url = base + 'music/songs'
       var track = {
         title: song.trackName,
         albumArt: song.artworkUrl100,
@@ -65,7 +68,7 @@ var store = new vuex.Store({
       //Removes track from the database with delete
       $.ajax({
         // url:`http://localhost:3000/music/songs/${song}`,
-        url: "https://my-vue-music.herokuapp.com/music/songs/" + song,
+        url: base + "music/songs/" + song,
         method: 'DELETE'
       })
         .then(res => {
@@ -79,16 +82,20 @@ var store = new vuex.Store({
       var nextSong = {}
       if (song.rank > 1) {
         song.rank--
-        for (let i = 0; i < myTunes.length; i++) {
-          const conflictingSong = myTunes[i]
+        // myTunes.splice(5,1,song)
+        for (var i = 0; i < myTunes.length; i++) {
+          var conflictingSong = myTunes[i]
           if (song.rank == conflictingSong.rank && song._id !== conflictingSong._id) {
             nextSong = conflictingSong
             nextSong.rank++
+            break;
+            // myTunes.splice(i,1, nextSong)
           }
         }
+        commit("setMyTunes", myTunes)
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
-          url: "https://my-vue-music.herokuapp.com/music/songs/" + nextSong._id,
+          url: base + "music/songs/" + nextSong._id,
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify(nextSong)
@@ -98,16 +105,16 @@ var store = new vuex.Store({
           })
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
-          url: "https://my-vue-music.herokuapp.com/music/songs/" + song._id,
+          url: base + "music/songs/" + song._id,
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify(song)
         })
           .then(res => {
             console.log("Updated track:", res)
-            dispatch('getMyTunes')
           })
       } else {
+        commit("setMyTunes", myTunes)
         console.log("Can't do that, alrady at the top!")
       }
     },
@@ -117,16 +124,18 @@ var store = new vuex.Store({
       var nextSong = {}
       if (song.rank < myTunes.length) {
         song.rank++
-        for (let i = 0; i < myTunes.length; i++) {
-          const conflictingSong = myTunes[i]
+        for (var i = 0; i < myTunes.length; i++) {
+          var conflictingSong = myTunes[i]
           if (song.rank == conflictingSong.rank && song._id !== conflictingSong._id) {
             nextSong = conflictingSong
             nextSong.rank--
+            break;
           }
         }
+        commit("setMyTunes", myTunes)
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
-          url: "https://my-vue-music.herokuapp.com/music/songs/" + nextSong._id,
+          url: base + "music/songs/" + nextSong._id,
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify(nextSong)
@@ -136,7 +145,7 @@ var store = new vuex.Store({
           })
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
-          url: "https://my-vue-music.herokuapp.com/music/songs/" + song._id,
+          url: base + "music/songs/" + song._id,
           method: 'PUT',
           contentType: 'application/json',
           data: JSON.stringify(song)
@@ -144,10 +153,10 @@ var store = new vuex.Store({
         })
           .then(res => {
             console.log("Updated track:", res)
-            dispatch('getMyTunes')
           })
 
       } else {
+        commit("setMyTunes", myTunes)
         console.log("can't do that, already at lowest rank!")
       }
     }
