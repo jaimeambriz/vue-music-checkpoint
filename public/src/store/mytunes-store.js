@@ -20,25 +20,24 @@ var store = new vuex.Store({
         return a.rank - b.rank;
       })
       state.myTunes = songs
-      console.log("my tunes:", state.myTunes)
+      // console.log("my tunes:", state.myTunes)
     }
   },
   actions: {
     getMusicByArtist({ commit, dispatch }, artist) {
-      commit('setResults',[])
+      commit('setResults', [])
       var url = '//bcw-getter.herokuapp.com/?url=';
       var url2 = 'https://itunes.apple.com/search?term=' + artist;
       var apiUrl = url + encodeURIComponent(url2);
       $.getJSON(url2).then(data => {
         commit('setResults', data.results)
-        console.log('search results:', data)
+        // console.log('search results:', data)
       })
     },
     getMyTunes({ commit, dispatch }) {
       //this should send a get request to your server to return the list of saved tunes
-      $.getJSON( base + 'music/songs')
+      $.getJSON(base + 'music/songs')
         .then(songs => {
-          commit('setMyTunes', [])
           commit('setMyTunes', songs)
         })
 
@@ -68,13 +67,33 @@ var store = new vuex.Store({
       //Removes track from the database with delete
       $.ajax({
         // url:`http://localhost:3000/music/songs/${song}`,
-        url: base + "music/songs/" + song,
+        url: base + "music/songs/" + song._id,
         method: 'DELETE'
       })
         .then(res => {
           console.log("removed track:", res)
-          dispatch('getMyTunes')
+          // dispatch('getMyTunes')
+          dispatch('updateTracks', song)
         })
+    },
+    updateTracks({ commit, dispatch }, song) {
+      var myTunes = store.state.myTunes
+      myTunes.splice(song.rank-1,1)
+      for (var i = song.rank-1; i < myTunes.length; i++) {
+        var song = myTunes[i];
+        song.rank--
+        $.ajax({
+          // url:`http://localhost:3000/music/songs/${song}`,
+          url: base + "music/songs/" + song._id,
+          method: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify(song)
+        })
+          .then(res => {
+            console.log("Updated track:", res)
+          })
+      }
+        commit('setMyTunes', myTunes)
     },
     promoteTrack({ commit, dispatch }, song) {
       //this should increase the position / upvotes and downvotes on the track
@@ -101,7 +120,7 @@ var store = new vuex.Store({
           data: JSON.stringify(nextSong)
         })
           .then(res => {
-            console.log("Updated Next Song:", res)
+            // console.log("Updated Next Song:", res)
           })
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
@@ -141,7 +160,7 @@ var store = new vuex.Store({
           data: JSON.stringify(nextSong)
         })
           .then(res => {
-            console.log("Updated Next Song:", res)
+            // console.log("Updated Next Song:", res)
           })
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
