@@ -56,7 +56,7 @@
   }
 
   .iTunes {
-    background: url(https://ebin.files.wordpress.com/2012/03/ipad-hires-carbon-fiber-wp12.png);
+    background: url(../assets/carbon-fiber-background.png);
     background-attachment: fixed;
     background-size: cover;
   }
