@@ -76,6 +76,13 @@ var store = new vuex.Store({
           dispatch('updateTracks', song)
         })
     },
+    dragUpdateTracks({commit,dispatch}, songs){
+      for (var i = 0; i < songs.length; i++){
+        var song = songs[i]
+        song.rank = i+1
+      }
+      commit('setMyTunes', songs)
+    },
     updateTracks({ commit, dispatch }, song) {
       var myTunes = store.state.myTunes
       myTunes.splice(song.rank-1,1)

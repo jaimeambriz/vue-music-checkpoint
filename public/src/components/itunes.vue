@@ -6,14 +6,14 @@
         </form>
         <div v-for="song in results" class="song container">
             <div class="row">
-                <div class="col-sm-3 flex">
+                <div class="col-sm-3 flex img-animation">
                     <div class="img">
                         <img :src="song.artworkUrl100" alt="">
                         <button @click="addToMyTunes(song)" class="btn btn-success">add to playlist</button>
                     </div>
 
                 </div>
-                <div class="col-sm-9 info">
+                <div class="col-sm-9 info-animation">
                     <ul>
                         <li>
                             <h3>{{song.trackName}}</h3>
@@ -104,39 +104,5 @@
 
     .container {
         max-width: 100%;
-    }
-
-    .flex {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 3.5%;
-        animation: 1.1s cubic-bezier(0, 0.03, 0.15, 1.6) 0s 1 slideInFromTop;
-    }
-
-    .img {
-        margin-top: 20px;
-    }
-
-    .info {
-        animation: 1.1s cubic-bezier(0, 0.03, 0.15, 1.6) 0s 1 slideInFromBottom;
-
-    }
-
-    @keyframes slideInFromBottom {
-        0% {
-            transform: translateY(300%);
-        }
-        100% {
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes slideInFromTop {
-        0% {
-            transform: translateY(-400%);
-        }
-        100% {
-            transform: translateY(0);
-        }
     }
 </style>
