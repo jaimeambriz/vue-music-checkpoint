@@ -1,5 +1,5 @@
 <template>
-    <div class="mytunes" >
+    <div class="mytunes">
         <h1 class="text-center" style="font-family: fantasy; color: white">My Playlist</h1>
         <div class="container">
             <draggable v-model="myTunes">
