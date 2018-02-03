@@ -3,7 +3,7 @@
     <!-- YOU WILL PROBABLY END UP WITH SOMETHING LIKE THIS -->
     <div class="row insert">
 
-
+      
       <mytunes class="mytunes col-sm-5 scroll"></mytunes>
 
       <div class="title col-sm-1">
@@ -70,6 +70,7 @@
     display: inline-block;
     min-height: 500px;
     min-width: 47%;
+    margin-top:8rem
   }
 
   #traks {
@@ -88,6 +89,7 @@
     min-height: 500px;
     min-width: 47%;
     padding-left: 6%;
+    margin-top:8rem
   }
 
   div.scroll-container {

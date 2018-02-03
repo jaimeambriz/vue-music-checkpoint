@@ -9,6 +9,7 @@ var store = new vuex.Store({
   state: {
     myTunes: [],
     results: [],
+    error:{}
   },
 
   mutations: {
@@ -21,6 +22,9 @@ var store = new vuex.Store({
       })
       state.myTunes = songs
       // console.log("my tunes:", state.myTunes)
+    },
+    handleError(state, err){
+      state.error = err
     }
   },
   actions: {
@@ -33,12 +37,18 @@ var store = new vuex.Store({
         commit('setResults', data.results)
         // console.log('search results:', data)
       })
+      .catch(err => {
+        commit('handleError', err)
+      })
     },
     getMyTunes({ commit, dispatch }) {
       //this should send a get request to your server to return the list of saved tunes
       $.getJSON(base + 'music/songs')
         .then(songs => {
           commit('setMyTunes', songs)
+        })
+        .catch(err => {
+          commit('handleError', err)
         })
 
     },
@@ -56,11 +66,14 @@ var store = new vuex.Store({
         trackId: song.trackId,
         rank: song.rank
       }
-      console.log('added song:', track)
+      // console.log('added song:', track)
       $.post(url, track)
         .then(res => {
-          console.log('addToMyTunes response: ', res)
+          // console.log('addToMyTunes response: ', res)
           dispatch('getMyTunes')
+        })
+        .catch(err => {
+          commit('handleError', err)
         })
     },
     removeTrack({ commit, dispatch }, song) {
@@ -71,15 +84,34 @@ var store = new vuex.Store({
         method: 'DELETE'
       })
         .then(res => {
-          console.log("removed track:", res)
+          // console.log("removed track:", res)
           // dispatch('getMyTunes')
           dispatch('updateTracks', song)
         })
+        .catch(err => {
+          commit('handleError', err)
+        })
     },
     dragUpdateTracks({commit,dispatch}, songs){
+      var myTunes = store.state.myTunes
       for (var i = 0; i < songs.length; i++){
         var song = songs[i]
         song.rank = i+1
+        if(song._id !== myTunes[i]._id){
+          $.ajax({
+            // url:`http://localhost:3000/music/songs/${song}`,
+            url: base + "music/songs/" + song._id,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(song)
+          })
+            .then(res => {
+              // console.log("Updated track:", res)
+            })
+            .catch(err => {
+              commit('handleError', err)
+            })
+        }
       }
       commit('setMyTunes', songs)
     },
@@ -97,7 +129,10 @@ var store = new vuex.Store({
           data: JSON.stringify(song)
         })
           .then(res => {
-            console.log("Updated track:", res)
+            // console.log("Updated track:", res)
+          })
+          .catch(err => {
+            commit('handleError', err)
           })
       }
         commit('setMyTunes', myTunes)
@@ -129,6 +164,9 @@ var store = new vuex.Store({
           .then(res => {
             // console.log("Updated Next Song:", res)
           })
+          .catch(err => {
+            commit('handleError', err)
+          })
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
           url: base + "music/songs/" + song._id,
@@ -137,11 +175,14 @@ var store = new vuex.Store({
           data: JSON.stringify(song)
         })
           .then(res => {
-            console.log("Updated track:", res)
+            // console.log("Updated track:", res)
+          })
+          .catch(err => {
+            commit('handleError', err)
           })
       } else {
         commit("setMyTunes", myTunes)
-        console.log("Can't do that, alrady at the top!")
+        // console.log("Can't do that, alrady at the top!")
       }
     },
     demoteTrack({ commit, dispatch }, song) {
@@ -169,6 +210,9 @@ var store = new vuex.Store({
           .then(res => {
             // console.log("Updated Next Song:", res)
           })
+          .catch(err => {
+            commit('handleError', err)
+          })
         $.ajax({
           // url:`http://localhost:3000/music/songs/${song}`,
           url: base + "music/songs/" + song._id,
@@ -178,12 +222,15 @@ var store = new vuex.Store({
 
         })
           .then(res => {
-            console.log("Updated track:", res)
+            // console.log("Updated track:", res)
+          })
+          .catch(err => {
+            commit('handleError', err)
           })
 
       } else {
         commit("setMyTunes", myTunes)
-        console.log("can't do that, already at lowest rank!")
+        // console.log("can't do that, already at lowest rank!")
       }
     }
 
