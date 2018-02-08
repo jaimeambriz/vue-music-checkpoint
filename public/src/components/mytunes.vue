@@ -4,11 +4,17 @@
         <div class="container">
             <draggable v-model="myTunes">
                 <transition-group name="list-complete">
+                    
+                    <!-- ********** WITH WATCHER ********** -->
                     <div v-for="song in myTunes" :key="song._id" class="song">
+
+                        <!-- ********** USE i TO KEEP TRACK OF SONGS WITHOUT A WATCHER, OTHERWISE YOU WILL NEED A WATCHER CURRENTLY USING WATCHER FOR EXAMPLE*********
+                        <div v-for="(song, i) in myTunes" :key="song._id" class="song"> -->
+
                         <div class="row" :id="song._id">
                             <div class="col-sm-3 flex img-animation" id="my-tunes-img">
                                 <div class="img" style="padding-left: 14%;">
-                                    <img :src="song.albumArt" alt="album art" >
+                                    <img :src="song.albumArt" alt="album art">
                                     <button @click="removeFromPlaylist(song)" class="btn btn-danger">Remove Track</button>
                                     <div class="row">
                                         <div class="col-sm-12 promote-demote">
@@ -38,7 +44,15 @@
 
                                     </li>
                                     <li>
+                                        <!-- ********** WITH WATCHER ********** -->
                                         <my-audio :song="song"></my-audio>
+
+                                        <!-- ********** WITHOUT WATCHER **********
+                                        <audio controls class="audio" ref="player" v-if="song.preview">
+                                            <source id="audio" :src="song.preview" type="audio/ogg">
+                                            <source id="audio" :src="song.preview" type="audio/mpeg"> 
+                                                Your browser does not support the audio element.
+                                        </audio> -->
                                     </li>
                                 </ul>
                             </div>
@@ -155,8 +169,9 @@
     .list-complete-leave-active {
         opacity: 0;
     }
-    .my-playlist{
-        left:10%;
+
+    .my-playlist {
+        left: 10%;
         top: 1%;
         z-index: 4
     }
