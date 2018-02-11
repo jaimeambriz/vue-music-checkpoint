@@ -1,10 +1,12 @@
 <template>
     <div class="mytunes">
+        <img src="http://www.enochsystems.com/intl/wp-content/uploads/2015/05/1-drag-flick.png" alt="drag icon" class="drag-enable active" id="draggable"
+         @click="enableDrag">
         <h1 class="text-center my-playlist" style="font-family: fantasy; color: white; position:fixed">My Playlist</h1>
         <div class="container">
-            <draggable v-model="myTunes">
+            <draggable v-model="myTunes" :options="{'disabled':drag}">
                 <transition-group name="list-complete">
-                    
+
                     <!-- ********** WITH WATCHER ********** -->
                     <div v-for="song in myTunes" :key="song._id" class="song">
 
@@ -12,7 +14,7 @@
                         <div v-for="(song, i) in myTunes" :key="song._id" class="song"> -->
 
                         <div class="row" :id="song._id">
-                            <div class="col-sm-3 flex img-animation" id="my-tunes-img">
+                            <div class="col-sm-3 flex img-animation sortable-drag" id="my-tunes-img">
                                 <div class="img" style="padding-left: 14%;">
                                     <img :src="song.albumArt" alt="album art">
                                     <button @click="removeFromPlaylist(song)" class="btn btn-danger">Remove Track</button>
@@ -73,13 +75,21 @@
 
         data() {
             return {
+                drag: false
             }
         },
         mounted() {
             this.$store.dispatch('getMyTunes')
         },
         methods: {
-
+            enableDrag() {
+                this.drag = !this.drag
+                if (this.drag){
+                $('#draggable').removeClass('active').addClass('inactive')
+                }else{
+                $('#draggable').removeClass('inactive').addClass('active')   
+                }
+            },
             removeFromPlaylist(song) {
                 var myTunes = this.$store.state.myTunes
                 this.$store.dispatch('removeTrack', song)
@@ -174,5 +184,20 @@
         left: 10%;
         top: 1%;
         z-index: 4
+    }
+
+    .drag-enable {
+        position: fixed;
+        top: 1%;
+        left: 2%;
+        width: 50px;
+        cursor: pointer;
+    }
+
+    .active:hover {
+        box-shadow: 5px 5px 5px green;
+    }
+    .inactive:hover{
+        box-shadow: 5px 5px 5px red;
     }
 </style>
