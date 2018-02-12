@@ -2,7 +2,7 @@
     <div class="itunes">
         <form @submit.prevent="getMusicByArtist" class="form text-center" style="position:fixed">
             <input type="text" class="text-center" placeholder="Artist/Song" v-model="searchArtist">
-            <button type="submit">Get Trak§</button>
+            <button type="submit" id="get-music-button" >Get Trak§</button>
         </form>
         <div class="container">
             <div v-for="song in results" class="song">
@@ -59,6 +59,7 @@
 
         methods: {
             getMusicByArtist() {
+                $('#get-music-button').text('Loading....')
                 this.$store.dispatch('getMusicByArtist', this.searchArtist)
                 this.searchArtist = ''
             },
@@ -70,6 +71,7 @@
         },
         computed: {
             results() {
+                setTimeout(function () { $("#get-music-button").text('Get Trak§'); }, 1500)
                 return this.$store.state.results
             }
         },
