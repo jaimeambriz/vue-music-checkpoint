@@ -70,6 +70,8 @@
 <script>
     import MyAudio from './MyAudio'
     import Draggable from 'vuedraggable'
+    import swal from'sweetalert2'
+    import tag from '../assets/red-x-png.png'
     export default {
         name: 'mytunes',
 
@@ -96,6 +98,15 @@
                 song = myTunes[song.rank - 1]
                 $(`#${song._id}`).addClass('animated zoomOutLeft').one('animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd', function () {
                     $(this).removeClass('animated zoomOutLeft')
+                })
+                swal({
+                    position: 'center',
+                    imageUrl: tag,
+                    imageHeight: 100,
+                    imageAlt: 'A Check Mark',
+                    title: 'Successfuly added to your library',
+                    showConfirmButton: false,
+                    timer: 1000
                 })
             },
             promoteTrack(song) {

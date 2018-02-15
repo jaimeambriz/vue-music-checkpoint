@@ -48,6 +48,8 @@
 
 
 <script>
+    import swal from'sweetalert2'
+    import tag from '../assets/check-mark.png'
     export default {
         name: 'itunes',
         data() {
@@ -64,8 +66,18 @@
                 this.searchArtist = ''
             },
             addToMyTunes(song) {
+                var x = '../src/assets/check-mark.png'
                 song.rank = this.$store.state.myTunes.length + 1
                 this.$store.dispatch('addToMyTunes', song)
+                swal({
+                    position: 'center',
+                    imageUrl: tag,
+                    imageHeight: 100,
+                    imageAlt: 'A Check Mark',
+                    title: 'Successfuly added to your library',
+                    showConfirmButton: false,
+                    timer: 1000
+                })
 
             }
         },
